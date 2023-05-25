@@ -99,4 +99,23 @@ require('lazy').setup({
       end, { noremap = true, silent = true })
     end,
   },
+  -- ファインダーの設定
+  {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      local function builtin(name, opts)
+        return function()
+          require('telescope.builtin')[name](opts)
+        end
+      end
+      local keymap_opts = { noremap = true, silent = true }
+
+      vim.keymap.set('n', ',f', builtin('find_files'), keymap_opts)
+      vim.keymap.set('n', ',r', builtin('live_grep'), keymap_opts)
+    end,
+  },
 })
