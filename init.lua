@@ -142,4 +142,64 @@ require('lazy').setup({
       vim.keymap.set('n', 'qd', ':bdelete<CR>', keymap_opts)
     end
   },
+  -- 言語サーバーの設定
+  {
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      -- 'hrsh7th/cmp-nvim-lsp',
+      'williamboman/mason-lspconfig.nvim',
+    },
+    config = function()
+      local on_attach = function(client, bufnr)
+        local bufopts = { noremap = true, silent = true, buffer = bufnr }
+        vim.keymap.set('n', 'gn', vim.diagnostic.goto_next, keymap_opts)
+        vim.keymap.set('n', 'gp', vim.diagnostic.goto_prev, keymap_opts)
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+        vim.keymap.set('n', 'gh', vim.lsp.buf.hover, bufopts)
+      end
+
+      local lsp_flags = {
+        debounce_text_changes = 150,
+      }
+
+      local on_attach_gopls = function(client, bufnr)
+        on_attach(client, bufnr)
+        vim.api.nvim_create_autocmd('BufWritePre', {
+          buffer = bufnr,
+          callback = function()
+            -- 保存時にパッケージをインポートする
+            local params = vim.lsp.util.make_range_params(nil, vim.lsp.util._get_offset_encoding())
+            params.context = { only = { 'source.organizeImports' }}
+            local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params)
+            for _, res in pairs(result or {}) do
+              for _, r in pairs(res.result or {}) do
+                if r.edit then
+                  vim.lsp.util.apply_workspace_edit(r.edit, vim.lsp.util._get_offset_encoding())
+                else
+                  vim.lsp.buf.execute_command(r.command)
+                end
+              end
+            end
+            -- 保存時にフォーマットする
+            vim.lsp.buf.format({ async = false })
+          end
+        })
+      end
+
+      -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      require('lspconfig')['gopls'].setup({
+        on_attach = on_attach_gopls,
+        flags = lsp_flags,
+      })
+    end,
+  },
+  {
+    'williamboman/mason.nvim',
+    config = true,
+  },
+  {
+    'williamboman/mason-lspconfig.nvim',
+    dependencies = { 'williamboman/mason.nvim' },
+    config = true,
+  },
 })
