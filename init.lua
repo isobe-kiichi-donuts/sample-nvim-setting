@@ -55,4 +55,16 @@ require('lazy').setup({
       vim.cmd([[colorscheme catppuccin]])
     end,
   },
+  -- シンタックスハイライトの設定
+  {
+    'nvim-treesitter/nvim-treesitter',
+    config = function()
+      require('nvim-treesitter.configs').setup({
+        ensure_installed = {'lua', 'go'},
+        highlight = {
+          enable = true,
+        },
+      })
+    end,
+  },
 })
