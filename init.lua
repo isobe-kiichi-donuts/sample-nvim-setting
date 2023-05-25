@@ -22,3 +22,21 @@ vim.keymap.set('n', 'sh', '<C-w>h', keymap_opts)
 vim.keymap.set('n', 'sj', '<C-w>j', keymap_opts)
 vim.keymap.set('n', 'sk', '<C-w>k', keymap_opts)
 vim.keymap.set('n', 'sl', '<C-w>l', keymap_opts)
+
+
+-- プラグインマネージャーが入っていなければインストールする
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- 各種プラグインの設定
+require('lazy').setup({})
