@@ -84,4 +84,19 @@ require('lazy').setup({
       vim.opt.showmode = false
     end,
   },
+  -- ファイラーの設定
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v2.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
+      'MunifTanjim/nui.nvim',
+    },
+    config = function ()
+      vim.keymap.set('n', '<C-n>', function ()
+        require('neo-tree.command').execute({ position = 'float', toggle = true, reveal = true })
+      end, { noremap = true, silent = true })
+    end,
+  },
 })
