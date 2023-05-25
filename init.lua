@@ -67,4 +67,21 @@ require('lazy').setup({
       })
     end,
   },
+  -- ステータスラインの設定
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('lualine').setup({
+        opts = {
+          options = {
+            theme = 'catppuccin',
+          },
+        },
+      })
+      vim.opt.showmode = false
+    end,
+  },
 })
