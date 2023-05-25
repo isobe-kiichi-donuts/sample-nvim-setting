@@ -118,4 +118,28 @@ require('lazy').setup({
       vim.keymap.set('n', ',r', builtin('live_grep'), keymap_opts)
     end,
   },
+  -- バッファラインの設定
+  {
+    'akinsho/bufferline.nvim',
+    version = '3.*',
+    dependencies = {
+      'catppuccin',
+      'nvim-tree/nvim-web-devicons',
+    },
+    opts = function ()
+      return {
+        highlights = require('catppuccin.groups.integrations.bufferline').get(),
+      }
+    end,
+    config = function()
+      require("bufferline").setup({
+        highlights = require('catppuccin.groups.integrations.bufferline').get(),
+      })
+
+      local keymap_opts = { noremap = true, silent = true }
+      vim.keymap.set('n', 'qn', ':BufferLineCycleNext<CR>', keymap_opts)
+      vim.keymap.set('n', 'qp', ':BufferLineCyclePrev<CR>', keymap_opts)
+      vim.keymap.set('n', 'qd', ':bdelete<CR>', keymap_opts)
+    end
+  },
 })
