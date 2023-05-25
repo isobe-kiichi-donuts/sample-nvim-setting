@@ -39,4 +39,20 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- 各種プラグインの設定
-require('lazy').setup({})
+require('lazy').setup({
+  -- カラースキーマの設定
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    config = function()
+      require('catppuccin').setup({
+        flavour = 'frappe',
+        integrations = {
+          neotree = true,
+        },
+      })
+      vim.opt.termguicolors = true
+      vim.cmd([[colorscheme catppuccin]])
+    end,
+  },
+})
