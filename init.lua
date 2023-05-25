@@ -202,4 +202,31 @@ require('lazy').setup({
     dependencies = { 'williamboman/mason.nvim' },
     config = true,
   },
+  -- 補完の設定
+  {
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-nvim-lsp',
+    },
+    config = function()
+      local cmp = require('cmp')
+
+      cmp.setup({
+        mapping = cmp.mapping.preset.insert({
+          ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        }),
+        sources = cmp.config.sources({
+          { name = 'buffer' },
+          { name = 'nvim_lsp' },
+        }),
+      })
+      cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' },
+        },
+      })
+    end,
+  },
 })
